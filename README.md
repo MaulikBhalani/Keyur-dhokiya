@@ -1,7 +1,19 @@
 # keyur.framer.website — offline copy
 
-Mirrored on 2026-10-27 with `tools/mirror.py` (run `python3 -I tools/mirror.py site` from the
-project root to refresh it). All 34 pages from the site's sitemap are included:
+Mirrored on 2026-10-27 with `tools/mirror.py`. All 34 pages from the site's sitemap are included.
+
+This build is made for **https://maulikbhalani.github.io/Keyur-dhokiya/**: every asset path,
+internal link and router route starts with `/Keyur-dhokiya`. To rebuild for a different location,
+run from the project root:
+
+    python3 -I tools/mirror.py site /Keyur-dhokiya     # GitHub Pages project site (current build)
+    python3 -I tools/mirror.py site                    # a domain root, e.g. a custom domain or localhost:8000/
+
+After redeploying, do a hard refresh (Cmd+Shift+R) once: the JavaScript files keep the same names
+between builds, so the browser and GitHub's CDN may serve the previous build's copies for up to
+10 minutes, which makes page-to-page navigation request the old asset paths.
+
+Contents:
 
 - `index.html` — home. Every other page lives at its own path, e.g. `about/index.html`,
   `work/<slug>/index.html`, `blog/<slug>/index.html`, plus `404/index.html` and a root `404.html`.
@@ -15,14 +27,14 @@ project root to refresh it). All 34 pages from the site's sitemap are included:
 ## Running it
 
 The JavaScript is loaded as ES modules, which browsers refuse to run from a `file://` URL,
-so serve the folder with any static web server. From inside the `site` folder:
+so it needs a static web server. Because this build's paths start with `/Keyur-dhokiya`, a local
+server must expose the folder under that same path. From the project root:
 
-    python3 -m http.server 8000
+    mkdir -p /tmp/pages && ln -sfn "$PWD/site" /tmp/pages/Keyur-dhokiya
+    python3 -m http.server 8000 --directory /tmp/pages
 
-then open http://localhost:8000/. Asset paths are root-absolute (`/assets/...`), so the `site`
-folder must be the server's document root. Any static host (Netlify, GitHub Pages, S3, nginx)
-works the same way; on hosts that serve `/about` as `about/index.html` directly, no further
-configuration is needed.
+then open http://localhost:8000/Keyur-dhokiya/. (A build made without a base path can be served
+straight from the `site` folder at http://localhost:8000/.)
 
 ## Changes from the original
 
